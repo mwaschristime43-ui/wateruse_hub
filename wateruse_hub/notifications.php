@@ -1,0 +1,4 @@
+<?php
+require_once __DIR__.'/config/database.php'; require_once __DIR__.'/includes/functions.php'; require_login();$s=$pdo->prepare("SELECT * FROM notifications WHERE user_id=? ORDER BY created_at DESC LIMIT 100");$s->execute([current_user()['id']]);$rows=$s->fetchAll();$pdo->prepare("UPDATE notifications SET is_read=1 WHERE user_id=?")->execute([current_user()['id']]);$pageTitle='Notifications';require 'includes/header.php';?>
+<div class="panel"><div class="panel-head"><h3>Your notifications</h3><span class="muted"><?=count($rows)?> recent messages</span></div><?php foreach($rows as $r):?><div class="notification-item"><span class="notification-dot"></span><div><p><?=e($r['message'])?></p><small><?=e($r['created_at'])?></small></div></div><?php endforeach;?><?php if(!$rows):?><p class="empty">You have no notifications yet.</p><?php endif;?></div>
+<?php require 'includes/footer.php';?>
